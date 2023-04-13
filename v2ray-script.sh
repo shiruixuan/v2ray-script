@@ -9,7 +9,7 @@ docker run --rm -it -v ~/acme.sh:/acme.sh -v ~/nginx/sslcert:/etc/nginx/sslcert 
 
 echo "0 0 * * * docker run --rm -it --net=host -v ~/acme.sh:/acme.sh -v ~/nginx/sslcert:/etc/nginx/sslcert neilpang/acme.sh --cron > /dev/null" >> /var/spool/cron/crontabs/root
 
-cat > /etc/nginx/nginx.conf<<-EOF
+cat > ~/nginx/nginx.conf<<-EOF
 user www-data;
 worker_processes auto;
 error_log /var/log/nginx/error.log;
@@ -47,7 +47,7 @@ http {
 }
 EOF
 
-cat > /etc/nginx/conf.d/bjjtw.top.conf<<-EOF
+cat > ~/nginx/conf.d/bjjtw.top.conf<<-EOF
 server {
     listen 80;
     listen [::]:80;
@@ -98,7 +98,7 @@ EOF
 
 docker run -d --net=host --name=nginx --restart=always -v ~/nginx/nginx.conf:/etc/nginx/nginx.conf -v ~/nginx/conf.d:/etc/nginx/conf.d -v ~/nginx/sslcert:/etc/nginx/sslcert nginx
 
-cat > /etc/v2ray/config.conf<<-EOF
+cat > ~/v2ray/config.conf<<-EOF
 {
 	"stats": {},
 	"log": {

@@ -3,6 +3,9 @@
 # Author: shiruixuan<https://github.com/shiruixuan>
 
 
+mkdir -p ~/nginx/conf.d
+mkdir -p ~/v2ray
+
 docker run --rm -it -v ~/acme.sh:/acme.sh --net=host neilpang/acme.sh --set-default-ca --server letsencrypt
 docker run --rm -it -v ~/acme.sh:/acme.sh --net=host neilpang/acme.sh --issue -d bjjtw.top --keylength ec-256 --standalone
 docker run --rm -it -v ~/acme.sh:/acme.sh -v ~/nginx/sslcert:/etc/nginx/sslcert --net=host neilpang/acme.sh --install-cert -d bjjtw.top --ecc --key-file /etc/nginx/sslcert/bjjtw.top.key --fullchain-file /etc/nginx/sslcert/bjjtw.top.pem
@@ -23,9 +26,9 @@ events {
 }
 
 http {
-    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
-                      '$status $body_bytes_sent "$http_referer" '
-                      '"$http_user_agent" "$http_x_forwarded_for"';
+    log_format  main  '\$remote_addr - \$remote_user [\$time_local] "\$request" '
+                      '\$status \$body_bytes_sent "\$http_referer" '
+                      '"\$http_user_agent" "\$http_x_forwarded_for"';
 
     access_log  /var/log/nginx/access.log  main;
     server_tokens off;
@@ -52,7 +55,7 @@ server {
     listen 80;
     listen [::]:80;
     server_name bjjtw.top;
-    return 301 https://$server_name:443$request_uri;
+    return 301 https://\$server_name:443\$request_uri;
 }
 
 server {
@@ -86,153 +89,153 @@ server {
       proxy_redirect off;
       proxy_pass http://127.0.0.1:29535;
       proxy_http_version 1.1;
-      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Upgrade \$http_upgrade;
       proxy_set_header Connection "upgrade";
-      proxy_set_header Host $host;
+      proxy_set_header Host \$host;
       # Show real IP in v2ray access.log
-      proxy_set_header X-Real-IP $remote_addr;
-      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Real-IP \$remote_addr;
+      proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
     }
 }
 EOF
 
 docker run -d --net=host --name=nginx --restart=always -v ~/nginx/nginx.conf:/etc/nginx/nginx.conf -v ~/nginx/conf.d:/etc/nginx/conf.d -v ~/nginx/sslcert:/etc/nginx/sslcert nginx
 
-cat > ~/v2ray/config.conf<<-EOF
+cat > ~/v2ray/config.json<<-EOF
 {
-	"stats": {},
-	"log": {
-		"access": "/var/log/v2ray/access.log",
-		"error": "/var/log/v2ray/error.log",
-		"loglevel": "warning"
-	},
-	"api": {
-		"tag": "api",
-		"services": [
-			"HandlerService",
-			"LoggerService",
-			"StatsService"
-		]
-	},
-	"policy": {
-		"levels": {
-			"0": {
-				"statsUserUplink": true,
-				"statsUserDownlink": true
-			},
-			"1": {
-				"statsUserUplink": true,
-				"statsUserDownlink": true
-			}
-		},
-		"system": {
-			"statsInboundUplink": true,
-			"statsInboundDownlink": true
-		}
-	},
-	"inbounds": [
-		{
-			"port": 29535,
-			"protocol": "vmess",
-			"settings": {
-				"clients": [
-					{
-						"email": "user1@mail.com",
-						"id": "a1521187-6faa-412d-861d-cccf29c6217f",
-						"level": 1,
-						"alterId": 0
-					},
-					{
-						"email": "user2@mail.com",
-						"id": "a1521187-6faa-412d-861d-cccf29c6218f",
-						"level": 1,
-						"alterId": 0
-					},
-					{
-						"email": "user3@mail.com",
-						"id": "a1521187-6faa-412d-861d-cccf29c6215f",
-						"level": 1,
-						"alterId": 0
-					},
-					{
-						"email": "user4@mail.com",
-						"id": "a1521187-6faa-412d-861d-cccf29c6216f",
-						"level": 1,
-						"alterId": 0
-					}
-				],
-				"disableInsecureEncryption": false
-			},
-			"streamSettings": {
-				"network": "ws",
-				"wsSettings": {
-					"path": "/cULsKRN",
-					"header": {
-						"Host": "bjjtw.top"
-					}
-				}
-			}
-		},
-		{
-			"listen": "127.0.0.1",
-			"port": 10085,
-			"protocol": "dokodemo-door",
-			"settings": {
-				"address": "127.0.0.1"
-			},
-			"tag": "api"
-		}
-		//include_ss
-		//include_socks
-		//include_mtproto
-		//include_in_config
-		//
-	],
-	"outbounds": [
-		{
-			"protocol": "freedom",
-			"settings": {}
-		},
-		{
-			"protocol": "blackhole",
-			"settings": {},
-			"tag": "blocked"
-		}
-		//include_out_config
-		//
-	],
-	"dns": {
-		"servers": [
-			"https+local://dns.google/dns-query",
-			"8.8.8.8",
-			"1.1.1.1",
-			"localhost"
-		]
-	},
-	"routing": {
-		"settings": {
-			"rules": [
-				{
-					"inboundTag": [
-						"api"
-					],
-					"outboundTag": "api",
-					"type": "field"
-				}
-				//include_ban_ad
-				//include_rules
-				//
-			]
-		},
-		"strategy": "rules"
-	},
-	"transport": {
-		"kcpSettings": {
-			"uplinkCapacity": 100,
-			"downlinkCapacity": 100,
-			"congestion": true
-		}
-	}
+    "stats": {},
+    "log": {
+        "access": "/var/log/v2ray/access.log",
+        "error": "/var/log/v2ray/error.log",
+        "loglevel": "warning"
+    },
+    "api": {
+        "tag": "api",
+        "services": [
+            "HandlerService",
+            "LoggerService",
+            "StatsService"
+        ]
+    },
+    "policy": {
+        "levels": {
+            "0": {
+                "statsUserUplink": true,
+                "statsUserDownlink": true
+            },
+            "1": {
+                "statsUserUplink": true,
+                "statsUserDownlink": true
+            }
+        },
+        "system": {
+            "statsInboundUplink": true,
+            "statsInboundDownlink": true
+        }
+    },
+    "inbounds": [
+        {
+            "port": 29535,
+            "protocol": "vmess",
+            "settings": {
+                "clients": [
+                    {
+                        "email": "user1@mail.com",
+                        "id": "a1521187-6faa-412d-861d-cccf29c6217f",
+                        "level": 1,
+                        "alterId": 0
+                    },
+                    {
+                        "email": "user2@mail.com",
+                        "id": "a1521187-6faa-412d-861d-cccf29c6218f",
+                        "level": 1,
+                        "alterId": 0
+                    },
+                    {
+                        "email": "user3@mail.com",
+                        "id": "a1521187-6faa-412d-861d-cccf29c6215f",
+                        "level": 1,
+                        "alterId": 0
+                    },
+                    {
+                        "email": "user4@mail.com",
+                        "id": "a1521187-6faa-412d-861d-cccf29c6216f",
+                        "level": 1,
+                        "alterId": 0
+                    }
+                ],
+                "disableInsecureEncryption": false
+            },
+            "streamSettings": {
+                "network": "ws",
+                "wsSettings": {
+                    "path": "/cULsKRN",
+                    "header": {
+                        "Host": "bjjtw.top"
+                    }
+                }
+            }
+        },
+        {
+            "listen": "127.0.0.1",
+            "port": 10085,
+            "protocol": "dokodemo-door",
+            "settings": {
+                "address": "127.0.0.1"
+            },
+            "tag": "api"
+        }
+        //include_ss
+        //include_socks
+        //include_mtproto
+        //include_in_config
+        //
+    ],
+    "outbounds": [
+        {
+            "protocol": "freedom",
+            "settings": {}
+        },
+        {
+            "protocol": "blackhole",
+            "settings": {},
+            "tag": "blocked"
+        }
+        //include_out_config
+        //
+    ],
+    "dns": {
+        "servers": [
+            "https+local://dns.google/dns-query",
+            "8.8.8.8",
+            "1.1.1.1",
+            "localhost"
+        ]
+    },
+    "routing": {
+        "settings": {
+            "rules": [
+                {
+                    "inboundTag": [
+                        "api"
+                    ],
+                    "outboundTag": "api",
+                    "type": "field"
+                }
+                //include_ban_ad
+                //include_rules
+                //
+            ]
+        },
+        "strategy": "rules"
+    },
+    "transport": {
+        "kcpSettings": {
+            "uplinkCapacity": 100,
+            "downlinkCapacity": 100,
+            "congestion": true
+        }
+    }
 }
 EOF
 

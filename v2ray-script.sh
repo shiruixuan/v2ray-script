@@ -18,7 +18,7 @@ wget https://raw.githubusercontent.com/shiruixuan/v2ray-script/main/nginx.conf -
 wget https://raw.githubusercontent.com/shiruixuan/v2ray-script/main/bjjtw.top.conf -O ~/nginx/conf.d/bjjtw.top.conf
 docker run -d --net=host --name=nginx --restart=always -v ~/nginx/nginx.conf:/etc/nginx/nginx.conf -v ~/nginx/conf.d:/etc/nginx/conf.d -v ~/nginx/cert:/etc/nginx/cert nginx
 
-bash <(curl -fsSL git.io/warp.sh) proxy
+bash <(curl -fsSL https://raw.githubusercontent.com/P3TERX/warp.sh/main/warp.sh) proxy
 
 wget https://raw.githubusercontent.com/shiruixuan/v2ray-script/main/config.json -O ~/v2ray/config.json
 docker run -d --net=host --name=v2ray --restart=always -v ~/v2ray/config.json:/etc/v2ray/config.json v2fly/v2fly-core:v4.45.2

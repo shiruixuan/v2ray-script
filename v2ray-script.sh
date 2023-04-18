@@ -174,6 +174,13 @@ cat > ~/v2ray/config.json<<-EOF
                         "Host": "bjjtw.top"
                     }
                 }
+            },
+            "sniffing": {
+                "enabled": true,
+                "destOverride": [
+                    "http",
+                    "tls"
+                ]
             }
         },
         {
@@ -200,6 +207,18 @@ cat > ~/v2ray/config.json<<-EOF
             "protocol": "blackhole",
             "settings": {},
             "tag": "blocked"
+        },
+        {
+            "tag":"warp",
+            "protocol": "socks",
+            "settings": {
+                "servers": [
+                    {
+                        "address": "127.0.0.1",
+                        "port": 40000
+                    }
+                ]
+            }
         }
         //include_out_config
         //
@@ -221,6 +240,11 @@ cat > ~/v2ray/config.json<<-EOF
                     ],
                     "outboundTag": "api",
                     "type": "field"
+                },
+                {
+                    "outboundTag": "warp",
+                    "type": "field",
+                    "network": "udp,tcp"
                 }
                 //include_ban_ad
                 //include_rules

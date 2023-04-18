@@ -4,6 +4,7 @@
 
 
 mkdir -p ~/nginx/conf.d
+mkdir -p ~/nginx/sslcert
 mkdir -p ~/v2ray
 
 docker run --rm -it -v ~/acme.sh:/acme.sh --net=host neilpang/acme.sh --set-default-ca --server letsencrypt

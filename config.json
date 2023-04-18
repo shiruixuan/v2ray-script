@@ -70,6 +70,13 @@
 						"Host": "bjjtw.top"
 					}
 				}
+			},
+			"sniffing": {
+				"enabled": true,
+				"destOverride": [
+					"http",
+					"tls"
+				]
 			}
 		},
 		{
@@ -96,6 +103,18 @@
 			"protocol": "blackhole",
 			"settings": {},
 			"tag": "blocked"
+		},
+		{
+			"tag":"warp",
+			"protocol": "socks",
+			"settings": {
+				"servers": [
+					{
+						"address": "127.0.0.1",
+						"port": 40000
+					}
+				]
+			}
 		}
 		//include_out_config
 		//
@@ -117,6 +136,11 @@
 					],
 					"outboundTag": "api",
 					"type": "field"
+				},
+				{
+					"outboundTag": "warp",
+					"type": "field",
+					"network": "udp,tcp"
 				}
 				//include_ban_ad
 				//include_rules

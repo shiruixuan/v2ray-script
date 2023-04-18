@@ -2,6 +2,7 @@
 # v2ray一键安装脚本
 # Author: shiruixuan<https://github.com/shiruixuan>
 
+apt install -y docker.io
 
 mkdir -p ~/nginx/conf.d
 mkdir -p ~/nginx/cert

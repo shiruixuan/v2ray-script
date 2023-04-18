@@ -101,6 +101,8 @@ EOF
 
 docker run -d --net=host --name=nginx --restart=always -v ~/nginx/nginx.conf:/etc/nginx/nginx.conf -v ~/nginx/conf.d:/etc/nginx/conf.d -v ~/nginx/sslcert:/etc/nginx/sslcert nginx
 
+bash <(curl -fsSL git.io/warp.sh) proxy
+
 cat > ~/v2ray/config.json<<-EOF
 {
     "stats": {},

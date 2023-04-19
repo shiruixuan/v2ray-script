@@ -17,11 +17,26 @@ else
     done
     DOMAIN=$DOMAIN_INPUT
 fi
+echo " 伪装域名(host)：$DOMAIN"
+
+WARP=true
+while true
+do
+	read -p " 是否启用 WARP？（y/n，默认=y）" WARP_INPUT
+	if [[ -z "${WARP_INPUT}" ]] || [[ $WARP_INPUT == "y" ]]; then
+		echo " 启用 WARP"
+		break
+	elif [[ $WARP_INPUT == "n" ]]; then
+		echo " 不启用 WARP"
+		WARP=false
+		break
+	else
+		echo " 输入错误，请重新输入！"
+	fi
+done
 
 ufw allow 80
 ufw allow 443
-
-echo " 伪装域名(host)：$DOMAIN"
 
 apt install -y docker.io
 
@@ -124,9 +139,9 @@ EOF
 
 docker run -d --net=host --name=nginx --restart=always -v ~/nginx/nginx.conf:/etc/nginx/nginx.conf -v ~/nginx/conf.d:/etc/nginx/conf.d -v ~/nginx/cert:/etc/nginx/cert nginx
 
-bash <(curl -fsSL https://raw.githubusercontent.com/P3TERX/warp.sh/main/warp.sh) proxy
-
-cat > ~/v2ray/config.json<<-EOF
+if $WARP; then
+	bash <(curl -fsSL https://raw.githubusercontent.com/P3TERX/warp.sh/main/warp.sh) proxy
+	cat > ~/v2ray/config.json<<-EOF
 {
     "stats": {},
     "log": {
@@ -287,5 +302,144 @@ cat > ~/v2ray/config.json<<-EOF
     }
 }
 EOF
+else
+	cat > ~/v2ray/config.json<<-EOF
+{
+    "stats": {},
+    "log": {
+        "access": "/var/log/v2ray/access.log",
+        "error": "/var/log/v2ray/error.log",
+        "loglevel": "warning"
+    },
+    "api": {
+        "tag": "api",
+        "services": [
+            "HandlerService",
+            "LoggerService",
+            "StatsService"
+        ]
+    },
+    "policy": {
+        "levels": {
+            "0": {
+                "statsUserUplink": true,
+                "statsUserDownlink": true
+            },
+            "1": {
+                "statsUserUplink": true,
+                "statsUserDownlink": true
+            }
+        },
+        "system": {
+            "statsInboundUplink": true,
+            "statsInboundDownlink": true
+        }
+    },
+    "inbounds": [
+        {
+            "port": 29535,
+            "protocol": "vmess",
+            "settings": {
+                "clients": [
+                    {
+                        "email": "user1@mail.com",
+                        "id": "a1521187-6faa-412d-861d-cccf29c6217f",
+                        "level": 1,
+                        "alterId": 0
+                    },
+                    {
+                        "email": "user2@mail.com",
+                        "id": "a1521187-6faa-412d-861d-cccf29c6218f",
+                        "level": 1,
+                        "alterId": 0
+                    },
+                    {
+                        "email": "user3@mail.com",
+                        "id": "a1521187-6faa-412d-861d-cccf29c6215f",
+                        "level": 1,
+                        "alterId": 0
+                    },
+                    {
+                        "email": "user4@mail.com",
+                        "id": "a1521187-6faa-412d-861d-cccf29c6216f",
+                        "level": 1,
+                        "alterId": 0
+                    }
+                ],
+                "disableInsecureEncryption": false
+            },
+            "streamSettings": {
+                "network": "ws",
+                "wsSettings": {
+                    "path": "/cULsKRN",
+                    "header": {
+                        "Host": "$DOMAIN"
+                    }
+                }
+            }
+        },
+        {
+            "listen": "127.0.0.1",
+            "port": 10085,
+            "protocol": "dokodemo-door",
+            "settings": {
+                "address": "127.0.0.1"
+            },
+            "tag": "api"
+        }
+        //include_ss
+        //include_socks
+        //include_mtproto
+        //include_in_config
+        //
+    ],
+    "outbounds": [
+        {
+            "protocol": "freedom",
+            "settings": {}
+        },
+        {
+            "protocol": "blackhole",
+            "settings": {},
+            "tag": "blocked"
+        }
+        //include_out_config
+        //
+    ],
+    "dns": {
+        "servers": [
+            "https+local://dns.google/dns-query",
+            "8.8.8.8",
+            "1.1.1.1",
+            "localhost"
+        ]
+    },
+    "routing": {
+        "settings": {
+            "rules": [
+                {
+                    "inboundTag": [
+                        "api"
+                    ],
+                    "outboundTag": "api",
+                    "type": "field"
+                }
+                //include_ban_ad
+                //include_rules
+                //
+            ]
+        },
+        "strategy": "rules"
+    },
+    "transport": {
+        "kcpSettings": {
+            "uplinkCapacity": 100,
+            "downlinkCapacity": 100,
+            "congestion": true
+        }
+    }
+}
+EOF
+fi
 
 docker run -d --net=host --name=v2ray --restart=always -v ~/v2ray/config.json:/etc/v2ray/config.json v2fly/v2fly-core:v4.45.2

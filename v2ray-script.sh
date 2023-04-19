@@ -3,6 +3,23 @@
 # Author: shiruixuan<https://github.com/shiruixuan>
 
 
+if [ $1 ]; then
+	DOMAIN=$1
+else
+	while true
+	do
+		read -p " 请输入伪装域名：" DOMAIN_INPUT
+		if [[ -z "$DOMAIN_INPUT" ]]; then
+			echo " 域名输入错误，请重新输入！"
+		else
+			break
+		fi
+	done
+	DOMAIN=$DOMAIN_INPUT
+fi
+
+echo " 伪装域名(host)：$DOMAIN"
+
 apt install -y docker.io
 
 mkdir -p ~/nginx/conf.d

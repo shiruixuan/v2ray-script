@@ -44,11 +44,12 @@ mkdir -p ~/nginx/conf.d
 mkdir -p ~/nginx/cert
 mkdir -p ~/v2ray
 
-docker run --rm -it -v ~/acme.sh:/acme.sh --net=host neilpang/acme.sh --set-default-ca --server letsencrypt
-docker run --rm -it -v ~/acme.sh:/acme.sh --net=host neilpang/acme.sh --issue -d $DOMAIN --keylength ec-256 --standalone
-docker run --rm -it -v ~/acme.sh:/acme.sh -v ~/nginx/cert:/etc/nginx/cert --net=host neilpang/acme.sh --install-cert -d $DOMAIN --ecc --key-file /etc/nginx/cert/$DOMAIN.key --fullchain-file /etc/nginx/cert/$DOMAIN.pem
-
-echo "0 0 * * * docker run --rm -it --net=host -v ~/acme.sh:/acme.sh -v ~/nginx/cert:/etc/nginx/cert neilpang/acme.sh --cron > /dev/null" >> /var/spool/cron/crontabs/root
+if [ ! -s "/etc/nginx/cert/$DOMAIN.key" ] && [ ! -s "/etc/nginx/cert/$DOMAIN.pem" ]; then
+	docker run --rm -it -v ~/acme.sh:/acme.sh --net=host neilpang/acme.sh --set-default-ca --server letsencrypt
+	docker run --rm -it -v ~/acme.sh:/acme.sh --net=host neilpang/acme.sh --issue -d $DOMAIN --keylength ec-256 --standalone
+	docker run --rm -it -v ~/acme.sh:/acme.sh -v ~/nginx/cert:/etc/nginx/cert --net=host neilpang/acme.sh --install-cert -d $DOMAIN --ecc --key-file /etc/nginx/cert/$DOMAIN.key --fullchain-file /etc/nginx/cert/$DOMAIN.pem
+	echo "0 0 * * * docker run --rm -it --net=host -v ~/acme.sh:/acme.sh -v ~/nginx/cert:/etc/nginx/cert neilpang/acme.sh --cron > /dev/null" >> /var/spool/cron/crontabs/root
+fi
 
 cat > ~/nginx/nginx.conf<<-EOF
 user www-data;

@@ -18,6 +18,9 @@ else
 	DOMAIN=$DOMAIN_INPUT
 fi
 
+ufw allow 80
+ufw allow 443
+
 echo " 伪装域名(host)：$DOMAIN"
 
 apt install -y docker.io

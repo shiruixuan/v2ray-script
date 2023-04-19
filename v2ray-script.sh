@@ -4,18 +4,18 @@
 
 
 if [ $1 ]; then
-	DOMAIN=$1
+    DOMAIN=$1
 else
-	while true
-	do
-		read -p " 请输入伪装域名：" DOMAIN_INPUT
-		if [[ -z "$DOMAIN_INPUT" ]]; then
-			echo " 域名输入错误，请重新输入！"
-		else
-			break
-		fi
-	done
-	DOMAIN=$DOMAIN_INPUT
+    while true
+    do
+        read -p " 请输入伪装域名：" DOMAIN_INPUT
+        if [[ -z "$DOMAIN_INPUT" ]]; then
+            echo " 域名输入错误，请重新输入！"
+        else
+            break
+        fi
+    done
+    DOMAIN=$DOMAIN_INPUT
 fi
 
 ufw allow 80
@@ -199,6 +199,13 @@ cat > ~/v2ray/config.json<<-EOF
                         "Host": "$DOMAIN"
                     }
                 }
+            },
+            "sniffing": {
+                "enabled": true,
+                "destOverride": [
+                    "http",
+                    "tls"
+                ]
             }
         },
         {
@@ -225,6 +232,18 @@ cat > ~/v2ray/config.json<<-EOF
             "protocol": "blackhole",
             "settings": {},
             "tag": "blocked"
+        },
+        {
+            "tag":"warp",
+            "protocol": "socks",
+            "settings": {
+                "servers": [
+                    {
+                        "address": "127.0.0.1",
+                        "port": 40000
+                    }
+                ]
+            }
         }
         //include_out_config
         //
@@ -246,6 +265,11 @@ cat > ~/v2ray/config.json<<-EOF
                     ],
                     "outboundTag": "api",
                     "type": "field"
+                },
+                {
+                    "outboundTag": "warp",
+                    "type": "field",
+                    "network": "udp,tcp"
                 }
                 //include_ban_ad
                 //include_rules

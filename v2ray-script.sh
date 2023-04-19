@@ -44,7 +44,7 @@ mkdir -p ~/nginx/conf.d
 mkdir -p ~/nginx/cert
 mkdir -p ~/v2ray
 
-if [ ! -s "/etc/nginx/cert/$DOMAIN.key" ] && [ ! -s "/etc/nginx/cert/$DOMAIN.pem" ]; then
+if [ ! -s ~/nginx/cert/$DOMAIN.key ] || [ ! -s ~/nginx/cert/$DOMAIN.pem ]; then
 	docker run --rm -it -v ~/acme.sh:/acme.sh --net=host neilpang/acme.sh --set-default-ca --server letsencrypt
 	docker run --rm -it -v ~/acme.sh:/acme.sh --net=host neilpang/acme.sh --issue -d $DOMAIN --keylength ec-256 --standalone
 	docker run --rm -it -v ~/acme.sh:/acme.sh -v ~/nginx/cert:/etc/nginx/cert --net=host neilpang/acme.sh --install-cert -d $DOMAIN --ecc --key-file /etc/nginx/cert/$DOMAIN.key --fullchain-file /etc/nginx/cert/$DOMAIN.pem

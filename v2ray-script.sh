@@ -285,7 +285,10 @@ if $WARP; then
                 {
                     "outboundTag": "warp",
                     "type": "field",
-                    "network": "udp,tcp"
+                    "domain":[
+                        "domain:openai.com",
+                        "domain:ai.com"
+                    ]
                 }
                 //include_ban_ad
                 //include_rules

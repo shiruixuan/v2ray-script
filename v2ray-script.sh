@@ -75,7 +75,7 @@ server {
     listen 80;
     listen [::]:80;
     server_name $DOMAIN;
-    return 301 https://\$server_name:443\$request_uri;
+    return 301 https://$server_name:443$request_uri;
 }
 
 server {
@@ -103,18 +103,165 @@ server {
         sub_filter "86817.com" "$DOMAIN";
         sub_filter_once off;
     }
+}
+
+server {
+    listen       29535 ssl http2;
+    listen       [::]:29535 ssl http2;
+    server_name $DOMAIN;
+    charset utf-8;
+
+    # ssl配置
+    ssl_protocols TLSv1.1 TLSv1.2;
+    ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+    ssl_ecdh_curve secp384r1;
+    ssl_prefer_server_ciphers on;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 10m;
+    ssl_session_tickets off;
+    ssl_certificate /etc/nginx/cert/$DOMAIN.pem;
+    ssl_certificate_key /etc/nginx/cert/$DOMAIN.key;
+
+    root /usr/share/nginx/html;
+    location / {
+        proxy_ssl_server_name on;
+        proxy_pass https://86817.com/;
+        proxy_set_header Accept-Encoding '';
+        sub_filter "86817.com" "$DOMAIN";
+        sub_filter_once off;
+    }
     
 
     location /cULsKRN {
       proxy_redirect off;
-      proxy_pass http://127.0.0.1:29535;
+      proxy_pass http://127.0.0.1:29545;
       proxy_http_version 1.1;
-      proxy_set_header Upgrade \$http_upgrade;
+      proxy_set_header Upgrade $http_upgrade;
       proxy_set_header Connection "upgrade";
-      proxy_set_header Host \$host;
+      proxy_set_header Host $host;
       # Show real IP in v2ray access.log
-      proxy_set_header X-Real-IP \$remote_addr;
-      proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+
+server {
+    listen       29536 ssl http2;
+    listen       [::]:29536 ssl http2;
+    server_name $DOMAIN;
+    charset utf-8;
+
+    # ssl配置
+    ssl_protocols TLSv1.1 TLSv1.2;
+    ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+    ssl_ecdh_curve secp384r1;
+    ssl_prefer_server_ciphers on;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 10m;
+    ssl_session_tickets off;
+    ssl_certificate /etc/nginx/cert/$DOMAIN.pem;
+    ssl_certificate_key /etc/nginx/cert/$DOMAIN.key;
+
+    root /usr/share/nginx/html;
+    location / {
+        proxy_ssl_server_name on;
+        proxy_pass https://86817.com/;
+        proxy_set_header Accept-Encoding '';
+        sub_filter "86817.com" "$DOMAIN";
+        sub_filter_once off;
+    }
+    
+
+    location /cULsKSN {
+      proxy_redirect off;
+      proxy_pass http://127.0.0.1:29546;
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+      proxy_set_header Host $host;
+      # Show real IP in v2ray access.log
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+
+server {
+    listen       29537 ssl http2;
+    listen       [::]:29537 ssl http2;
+    server_name $DOMAIN;
+    charset utf-8;
+
+    # ssl配置
+    ssl_protocols TLSv1.1 TLSv1.2;
+    ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+    ssl_ecdh_curve secp384r1;
+    ssl_prefer_server_ciphers on;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 10m;
+    ssl_session_tickets off;
+    ssl_certificate /etc/nginx/cert/$DOMAIN.pem;
+    ssl_certificate_key /etc/nginx/cert/$DOMAIN.key;
+
+    root /usr/share/nginx/html;
+    location / {
+        proxy_ssl_server_name on;
+        proxy_pass https://86817.com/;
+        proxy_set_header Accept-Encoding '';
+        sub_filter "86817.com" "$DOMAIN";
+        sub_filter_once off;
+    }
+    
+
+    location /cULsKTN {
+      proxy_redirect off;
+      proxy_pass http://127.0.0.1:29547;
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+      proxy_set_header Host $host;
+      # Show real IP in v2ray access.log
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+
+server {
+    listen       29538 ssl http2;
+    listen       [::]:29538 ssl http2;
+    server_name $DOMAIN;
+    charset utf-8;
+
+    # ssl配置
+    ssl_protocols TLSv1.1 TLSv1.2;
+    ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+    ssl_ecdh_curve secp384r1;
+    ssl_prefer_server_ciphers on;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 10m;
+    ssl_session_tickets off;
+    ssl_certificate /etc/nginx/cert/$DOMAIN.pem;
+    ssl_certificate_key /etc/nginx/cert/$DOMAIN.key;
+
+    root /usr/share/nginx/html;
+    location / {
+        proxy_ssl_server_name on;
+        proxy_pass https://86817.com/;
+        proxy_set_header Accept-Encoding '';
+        sub_filter "86817.com" "$DOMAIN";
+        sub_filter_once off;
+    }
+    
+
+    location /cULsKUN {
+      proxy_redirect off;
+      proxy_pass http://127.0.0.1:29548;
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+      proxy_set_header Host $host;
+      # Show real IP in v2ray access.log
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }
 }
 EOF
@@ -155,7 +302,8 @@ cat > ~/v2ray/config.json<<-EOF
     },
     "inbounds": [
         {
-            "port": 29535,
+            "tag": "group1",
+            "port": 29545,
             "protocol": "vmess",
             "settings": {
                 "clients": [
@@ -164,19 +312,76 @@ cat > ~/v2ray/config.json<<-EOF
                         "id": "a1521187-6faa-412d-861d-cccf29c6217f",
                         "level": 1,
                         "alterId": 0
-                    },
+                    }
+                ],
+                "disableInsecureEncryption": false
+            },
+            "streamSettings": {
+                "network": "ws",
+                "wsSettings": {
+                    "path": "/cULsKRN",
+                    "header": {
+                        "Host": "$DOMAIN"
+                    }
+                }
+            }
+        },
+        {
+            "tag": "group2",
+            "port": 29546,
+            "protocol": "vmess",
+            "settings": {
+                "clients": [
                     {
                         "email": "user2@mail.com",
                         "id": "a1521187-6faa-412d-861d-cccf29c6218f",
                         "level": 1,
                         "alterId": 0
-                    },
+                    }
+                ],
+                "disableInsecureEncryption": false
+            },
+            "streamSettings": {
+                "network": "ws",
+                "wsSettings": {
+                    "path": "/cULsKSN",
+                    "header": {
+                        "Host": "$DOMAIN"
+                    }
+                }
+            }
+        },
+        {
+            "tag": "group3",
+            "port": 29547,
+            "protocol": "vmess",
+            "settings": {
+                "clients": [
                     {
                         "email": "user3@mail.com",
                         "id": "a1521187-6faa-412d-861d-cccf29c6215f",
                         "level": 1,
                         "alterId": 0
-                    },
+                    }
+                ],
+                "disableInsecureEncryption": false
+            },
+            "streamSettings": {
+                "network": "ws",
+                "wsSettings": {
+                    "path": "/cULsKTN",
+                    "header": {
+                        "Host": "$DOMAIN"
+                    }
+                }
+            }
+        },
+        {
+            "tag": "group4",
+            "port": 29548,
+            "protocol": "vmess",
+            "settings": {
+                "clients": [
                     {
                         "email": "user4@mail.com",
                         "id": "a1521187-6faa-412d-861d-cccf29c6216f",
@@ -189,7 +394,7 @@ cat > ~/v2ray/config.json<<-EOF
             "streamSettings": {
                 "network": "ws",
                 "wsSettings": {
-                    "path": "/cULsKRN",
+                    "path": "/cULsKUN",
                     "header": {
                         "Host": "$DOMAIN"
                     }

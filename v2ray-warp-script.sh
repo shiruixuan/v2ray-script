@@ -400,7 +400,7 @@ cat > ~/v2ray/config.json<<-EOF
         },
         {
             "tag": "group4",
-            "port": 29545,
+            "port": 29548,
             "protocol": "vmess",
             "settings": {
                 "clients": [

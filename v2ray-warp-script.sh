@@ -511,4 +511,4 @@ cat > ~/v2ray/config/config.json<<-EOF
 }
 EOF
 
-docker run -d --net=host --name=v2ray --restart=always -e TZ=Asia/Shanghai -v ~/v2ray/config/config.json:/etc/v2ray/config.json -v ~/v2ray/config/log:/var/log/v2ray v2fly/v2fly-core:v4.45.2
+docker run -d --net=host --name=v2ray --restart=always -e TZ=Asia/Shanghai -v ~/v2ray/config/config.json:/etc/v2ray/config.json -v ~/v2ray/log:/var/log/v2ray v2fly/v2fly-core:v4.45.2

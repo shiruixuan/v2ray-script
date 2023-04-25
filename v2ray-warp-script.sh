@@ -23,7 +23,8 @@ apt install -y docker.io
 
 mkdir -p ~/nginx/conf.d
 mkdir -p ~/nginx/cert
-mkdir -p ~/v2ray
+mkdir -p ~/v2ray/config
+mkdir -p ~/v2ray/log
 
 if [ ! -s ~/nginx/cert/$DOMAIN.key ] || [ ! -s ~/nginx/cert/$DOMAIN.pem ]; then
 	docker run --rm -it -v ~/acme.sh:/acme.sh --net=host neilpang/acme.sh --set-default-ca --server letsencrypt
@@ -269,7 +270,7 @@ EOF
 docker run -d --net=host --name=nginx --restart=always -v ~/nginx/nginx.conf:/etc/nginx/nginx.conf -v ~/nginx/conf.d:/etc/nginx/conf.d -v ~/nginx/cert:/etc/nginx/cert nginx
 
 bash <(curl -fsSL https://raw.githubusercontent.com/P3TERX/warp.sh/main/warp.sh) proxy
-cat > ~/v2ray/config.json<<-EOF
+cat > ~/v2ray/config/config.json<<-EOF
 {
     "stats": {},
     "log": {
@@ -510,4 +511,4 @@ cat > ~/v2ray/config.json<<-EOF
 }
 EOF
 
-docker run -d --net=host --name=v2ray --restart=always -e TZ=Asia/Shanghai -v ~/v2ray/config.json:/etc/v2ray/config.json v2fly/v2fly-core:v4.45.2
+docker run -d --net=host --name=v2ray --restart=always -e TZ=Asia/Shanghai -v ~/v2ray/config/config.json:/etc/v2ray/config.json -v ~/v2ray/config/log:/var/log/v2ray v2fly/v2fly-core:v4.45.2

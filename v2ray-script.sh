@@ -3,7 +3,7 @@
 # Author: shiruixuan<https://github.com/shiruixuan>
 
 
-if [ \$1 ]; then
+if [ $1 ]; then
     DOMAIN=$1
 else
     while true
@@ -75,7 +75,7 @@ server {
     listen 80;
     listen [::]:80;
     server_name $DOMAIN;
-    return 301 https://$server_name:443$request_uri;
+    return 301 https://\$server_name:443\$request_uri;
 }
 
 server {

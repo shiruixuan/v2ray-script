@@ -303,13 +303,12 @@ cat > ~/v2ray/config/config.json<<-EOF
     },
     "inbounds": [
         {
-            "tag": "group1",
             "port": 29545,
             "protocol": "vmess",
             "settings": {
                 "clients": [
                     {
-                        "email": "user1@mail.com",
+                        "email": "user1",
                         "id": "a1521187-6faa-412d-861d-cccf29c6217f",
                         "level": 1,
                         "alterId": 0
@@ -328,13 +327,12 @@ cat > ~/v2ray/config/config.json<<-EOF
             }
         },
         {
-            "tag": "group2",
             "port": 29546,
             "protocol": "vmess",
             "settings": {
                 "clients": [
                     {
-                        "email": "user2@mail.com",
+                        "email": "user2",
                         "id": "a1521187-6faa-412d-861d-cccf29c6218f",
                         "level": 1,
                         "alterId": 0
@@ -353,13 +351,12 @@ cat > ~/v2ray/config/config.json<<-EOF
             }
         },
         {
-            "tag": "group3",
             "port": 29547,
             "protocol": "vmess",
             "settings": {
                 "clients": [
                     {
-                        "email": "user3@mail.com",
+                        "email": "user3",
                         "id": "a1521187-6faa-412d-861d-cccf29c6215f",
                         "level": 1,
                         "alterId": 0
@@ -378,13 +375,12 @@ cat > ~/v2ray/config/config.json<<-EOF
             }
         },
         {
-            "tag": "group4",
             "port": 29548,
             "protocol": "vmess",
             "settings": {
                 "clients": [
                     {
-                        "email": "user4@mail.com",
+                        "email": "user4",
                         "id": "a1521187-6faa-412d-861d-cccf29c6216f",
                         "level": 1,
                         "alterId": 0

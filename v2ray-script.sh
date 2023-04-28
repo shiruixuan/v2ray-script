@@ -34,7 +34,7 @@ if [ ! -s ~/nginx/cert/$DOMAIN.key ] || [ ! -s ~/nginx/cert/$DOMAIN.pem ]; then
 fi
 
 cat > ~/nginx/nginx.conf<<-EOF
-user www-data;
+user nginx;
 worker_processes auto;
 error_log /var/log/nginx/error.log;
 pid /run/nginx.pid;
@@ -75,195 +75,17 @@ cat > ~/nginx/conf.d/$DOMAIN.conf<<-EOF
 server {
     listen 80;
     listen [::]:80;
+    listen 81 http2;
     server_name $DOMAIN;
-    return 301 https://\$server_name:443\$request_uri;
-}
-
-server {
-    listen       443 ssl http2;
-    listen       [::]:443 ssl http2;
-    server_name $DOMAIN;
-    charset utf-8;
-
-    # ssl配置
-    ssl_protocols TLSv1.1 TLSv1.2;
-    ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
-    ssl_ecdh_curve secp384r1;
-    ssl_prefer_server_ciphers on;
-    ssl_session_cache shared:SSL:10m;
-    ssl_session_timeout 10m;
-    ssl_session_tickets off;
-    ssl_certificate /etc/nginx/cert/$DOMAIN.pem;
-    ssl_certificate_key /etc/nginx/cert/$DOMAIN.key;
-
     root /usr/share/nginx/html;
     location / {
         proxy_ssl_server_name on;
-        proxy_pass https://86817.com/;
+        proxy_pass https://bing.ioliu.cn;
         proxy_set_header Accept-Encoding '';
-        sub_filter "86817.com" "$DOMAIN";
+        sub_filter "bing.ioliu.cn" "$DOMAIN";
         sub_filter_once off;
     }
-}
-
-server {
-    listen       29535 ssl http2;
-    listen       [::]:29535 ssl http2;
-    server_name $DOMAIN;
-    charset utf-8;
-
-    # ssl配置
-    ssl_protocols TLSv1.1 TLSv1.2;
-    ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
-    ssl_ecdh_curve secp384r1;
-    ssl_prefer_server_ciphers on;
-    ssl_session_cache shared:SSL:10m;
-    ssl_session_timeout 10m;
-    ssl_session_tickets off;
-    ssl_certificate /etc/nginx/cert/$DOMAIN.pem;
-    ssl_certificate_key /etc/nginx/cert/$DOMAIN.key;
-
-    root /usr/share/nginx/html;
-    location / {
-        proxy_ssl_server_name on;
-        proxy_pass https://86817.com/;
-        proxy_set_header Accept-Encoding '';
-        sub_filter "86817.com" "$DOMAIN";
-        sub_filter_once off;
-    }
-    
-
-    location /cULsKRN {
-      proxy_redirect off;
-      proxy_pass http://127.0.0.1:29545;
-      proxy_http_version 1.1;
-      proxy_set_header Upgrade \$http_upgrade;
-      proxy_set_header Connection "upgrade";
-      proxy_set_header Host \$host;
-      # Show real IP in v2ray access.log
-      proxy_set_header X-Real-IP \$remote_addr;
-      proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-    }
-}
-
-server {
-    listen       29536 ssl http2;
-    listen       [::]:29536 ssl http2;
-    server_name $DOMAIN;
-    charset utf-8;
-
-    # ssl配置
-    ssl_protocols TLSv1.1 TLSv1.2;
-    ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
-    ssl_ecdh_curve secp384r1;
-    ssl_prefer_server_ciphers on;
-    ssl_session_cache shared:SSL:10m;
-    ssl_session_timeout 10m;
-    ssl_session_tickets off;
-    ssl_certificate /etc/nginx/cert/$DOMAIN.pem;
-    ssl_certificate_key /etc/nginx/cert/$DOMAIN.key;
-
-    root /usr/share/nginx/html;
-    location / {
-        proxy_ssl_server_name on;
-        proxy_pass https://86817.com/;
-        proxy_set_header Accept-Encoding '';
-        sub_filter "86817.com" "$DOMAIN";
-        sub_filter_once off;
-    }
-    
-
-    location /cULsKSN {
-      proxy_redirect off;
-      proxy_pass http://127.0.0.1:29546;
-      proxy_http_version 1.1;
-      proxy_set_header Upgrade \$http_upgrade;
-      proxy_set_header Connection "upgrade";
-      proxy_set_header Host \$host;
-      # Show real IP in v2ray access.log
-      proxy_set_header X-Real-IP \$remote_addr;
-      proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-    }
-}
-
-server {
-    listen       29537 ssl http2;
-    listen       [::]:29537 ssl http2;
-    server_name $DOMAIN;
-    charset utf-8;
-
-    # ssl配置
-    ssl_protocols TLSv1.1 TLSv1.2;
-    ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
-    ssl_ecdh_curve secp384r1;
-    ssl_prefer_server_ciphers on;
-    ssl_session_cache shared:SSL:10m;
-    ssl_session_timeout 10m;
-    ssl_session_tickets off;
-    ssl_certificate /etc/nginx/cert/$DOMAIN.pem;
-    ssl_certificate_key /etc/nginx/cert/$DOMAIN.key;
-
-    root /usr/share/nginx/html;
-    location / {
-        proxy_ssl_server_name on;
-        proxy_pass https://86817.com/;
-        proxy_set_header Accept-Encoding '';
-        sub_filter "86817.com" "$DOMAIN";
-        sub_filter_once off;
-    }
-    
-
-    location /cULsKTN {
-      proxy_redirect off;
-      proxy_pass http://127.0.0.1:29547;
-      proxy_http_version 1.1;
-      proxy_set_header Upgrade \$http_upgrade;
-      proxy_set_header Connection "upgrade";
-      proxy_set_header Host \$host;
-      # Show real IP in v2ray access.log
-      proxy_set_header X-Real-IP \$remote_addr;
-      proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-    }
-}
-
-server {
-    listen       29538 ssl http2;
-    listen       [::]:29538 ssl http2;
-    server_name $DOMAIN;
-    charset utf-8;
-
-    # ssl配置
-    ssl_protocols TLSv1.1 TLSv1.2;
-    ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
-    ssl_ecdh_curve secp384r1;
-    ssl_prefer_server_ciphers on;
-    ssl_session_cache shared:SSL:10m;
-    ssl_session_timeout 10m;
-    ssl_session_tickets off;
-    ssl_certificate /etc/nginx/cert/$DOMAIN.pem;
-    ssl_certificate_key /etc/nginx/cert/$DOMAIN.key;
-
-    root /usr/share/nginx/html;
-    location / {
-        proxy_ssl_server_name on;
-        proxy_pass https://86817.com/;
-        proxy_set_header Accept-Encoding '';
-        sub_filter "86817.com" "$DOMAIN";
-        sub_filter_once off;
-    }
-    
-
-    location /cULsKUN {
-      proxy_redirect off;
-      proxy_pass http://127.0.0.1:29548;
-      proxy_http_version 1.1;
-      proxy_set_header Upgrade \$http_upgrade;
-      proxy_set_header Connection "upgrade";
-      proxy_set_header Host \$host;
-      # Show real IP in v2ray access.log
-      proxy_set_header X-Real-IP \$remote_addr;
-      proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-    }
+        location = /robots.txt {}
 }
 EOF
 

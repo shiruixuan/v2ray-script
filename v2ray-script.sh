@@ -27,10 +27,10 @@ mkdir -p ~/v2ray/config
 mkdir -p ~/v2ray/log
 
 if [ ! -s ~/nginx/cert/$DOMAIN.key ] || [ ! -s ~/nginx/cert/$DOMAIN.pem ]; then
-	docker run --rm -it -v ~/acme.sh:/acme.sh --net=host neilpang/acme.sh --set-default-ca --server letsencrypt
-	docker run --rm -it -v ~/acme.sh:/acme.sh --net=host neilpang/acme.sh --issue -d $DOMAIN --keylength ec-256 --standalone
-	docker run --rm -it -v ~/acme.sh:/acme.sh -v ~/nginx/cert:/etc/nginx/cert --net=host neilpang/acme.sh --install-cert -d $DOMAIN --ecc --key-file /etc/nginx/cert/$DOMAIN.key --fullchain-file /etc/nginx/cert/$DOMAIN.pem
-	echo "0 0 * * * docker run --rm -it --net=host -v ~/acme.sh:/acme.sh -v ~/nginx/cert:/etc/nginx/cert neilpang/acme.sh --cron > /dev/null" >> /var/spool/cron/crontabs/root
+    docker run --rm -it -v ~/acme.sh:/acme.sh --net=host neilpang/acme.sh --set-default-ca --server letsencrypt
+    docker run --rm -it -v ~/acme.sh:/acme.sh --net=host neilpang/acme.sh --issue -d $DOMAIN --keylength ec-256 --standalone
+    docker run --rm -it -v ~/acme.sh:/acme.sh -v ~/nginx/cert:/etc/nginx/cert --net=host neilpang/acme.sh --install-cert -d $DOMAIN --ecc --key-file /etc/nginx/cert/$DOMAIN.key --fullchain-file /etc/nginx/cert/$DOMAIN.pem
+    echo "0 0 * * * docker run --rm -it --net=host -v ~/acme.sh:/acme.sh -v ~/nginx/cert:/etc/nginx/cert neilpang/acme.sh --cron > /dev/null" >> /var/spool/cron/crontabs/root
 fi
 
 cat > ~/nginx/nginx.conf<<-EOF
@@ -304,97 +304,157 @@ cat > ~/v2ray/config/config.json<<-EOF
     "inbounds": [
         {
             "port": 29545,
-            "protocol": "vmess",
+            "protocol": "vless",
             "settings": {
                 "clients": [
                     {
                         "email": "user1",
                         "id": "a1521187-6faa-412d-861d-cccf29c6217f",
                         "level": 1,
-                        "alterId": 0
+                        "flow": "xtls-rprx-direct"
                     }
                 ],
-                "disableInsecureEncryption": false
+                "decryption": "none",
+                "fallbacks": [
+                    {
+                        "alpn": "http/1.1",
+                        "dest": 80
+                    },
+                    {
+                        "alpn": "h2",
+                        "dest": 81
+                    }
+                ]
             },
             "streamSettings": {
-                "network": "ws",
-                "wsSettings": {
-                    "path": "/cULsKRN",
-                    "header": {
-                        "Host": "$DOMAIN"
-                    }
+                "network": "tcp",
+                "security": "xtls",
+                "xtlsSettings": {
+                    "serverName": "$DOMAIN",
+                    "alpn": ["http/1.1", "h2"],
+                    "certificates": [
+                        {
+                            "certificateFile": "/etc/xray/bitdc.top.pem",
+                            "keyFile": "/etc/xray/bitdc.top.key"
+                        }
+                    ]
                 }
             }
         },
         {
             "port": 29546,
-            "protocol": "vmess",
+            "protocol": "vless",
             "settings": {
                 "clients": [
                     {
                         "email": "user2",
-                        "id": "a1521187-6faa-412d-861d-cccf29c6218f",
+                        "id": "a1521187-6faa-412d-861d-cccf29c6217f",
                         "level": 1,
-                        "alterId": 0
+                        "flow": "xtls-rprx-direct"
                     }
                 ],
-                "disableInsecureEncryption": false
+                "decryption": "none",
+                "fallbacks": [
+                    {
+                        "alpn": "http/1.1",
+                        "dest": 80
+                    },
+                    {
+                        "alpn": "h2",
+                        "dest": 81
+                    }
+                ]
             },
             "streamSettings": {
-                "network": "ws",
-                "wsSettings": {
-                    "path": "/cULsKSN",
-                    "header": {
-                        "Host": "$DOMAIN"
-                    }
+                "network": "tcp",
+                "security": "xtls",
+                "xtlsSettings": {
+                    "serverName": "$DOMAIN",
+                    "alpn": ["http/1.1", "h2"],
+                    "certificates": [
+                        {
+                            "certificateFile": "/etc/xray/bitdc.top.pem",
+                            "keyFile": "/etc/xray/bitdc.top.key"
+                        }
+                    ]
                 }
             }
         },
         {
             "port": 29547,
-            "protocol": "vmess",
+            "protocol": "vless",
             "settings": {
                 "clients": [
                     {
                         "email": "user3",
-                        "id": "a1521187-6faa-412d-861d-cccf29c6215f",
+                        "id": "a1521187-6faa-412d-861d-cccf29c6217f",
                         "level": 1,
-                        "alterId": 0
+                        "flow": "xtls-rprx-direct"
                     }
                 ],
-                "disableInsecureEncryption": false
+                "decryption": "none",
+                "fallbacks": [
+                    {
+                        "alpn": "http/1.1",
+                        "dest": 80
+                    },
+                    {
+                        "alpn": "h2",
+                        "dest": 81
+                    }
+                ]
             },
             "streamSettings": {
-                "network": "ws",
-                "wsSettings": {
-                    "path": "/cULsKTN",
-                    "header": {
-                        "Host": "$DOMAIN"
-                    }
+                "network": "tcp",
+                "security": "xtls",
+                "xtlsSettings": {
+                    "serverName": "$DOMAIN",
+                    "alpn": ["http/1.1", "h2"],
+                    "certificates": [
+                        {
+                            "certificateFile": "/etc/xray/bitdc.top.pem",
+                            "keyFile": "/etc/xray/bitdc.top.key"
+                        }
+                    ]
                 }
             }
         },
         {
             "port": 29548,
-            "protocol": "vmess",
+            "protocol": "vless",
             "settings": {
                 "clients": [
                     {
                         "email": "user4",
-                        "id": "a1521187-6faa-412d-861d-cccf29c6216f",
+                        "id": "a1521187-6faa-412d-861d-cccf29c6217f",
                         "level": 1,
-                        "alterId": 0
+                        "flow": "xtls-rprx-direct"
                     }
                 ],
-                "disableInsecureEncryption": false
+                "decryption": "none",
+                "fallbacks": [
+                    {
+                        "alpn": "http/1.1",
+                        "dest": 80
+                    },
+                    {
+                        "alpn": "h2",
+                        "dest": 81
+                    }
+                ]
             },
             "streamSettings": {
-                "network": "ws",
-                "wsSettings": {
-                    "path": "/cULsKUN",
-                    "header": {
-                        "Host": "$DOMAIN"
-                    }
+                "network": "tcp",
+                "security": "xtls",
+                "xtlsSettings": {
+                    "serverName": "$DOMAIN",
+                    "alpn": ["http/1.1", "h2"],
+                    "certificates": [
+                        {
+                            "certificateFile": "/etc/xray/bitdc.top.pem",
+                            "keyFile": "/etc/xray/bitdc.top.key"
+                        }
+                    ]
                 }
             }
         },
